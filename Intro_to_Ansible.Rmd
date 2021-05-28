@@ -1,0 +1,125 @@
+---
+title: "Intro to Ansible"
+author: "Rebecca Lange"
+date: "28/05/2021"
+output:
+  xaringan::moon_reader:
+    seal: false
+    css: ["default", "rladies", "rladies-fonts"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    yolo: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<center> <h1> Intro to Ansible </h1> </center>
+<center> <h2>Subtitle</h2> </center>
+<p>
+&nbsp;
+&nbsp;
+</p>
+
+ [**Rebecca Lange**](mailto:rebecca.lange@curtin.edu.au)
+
+<span style="color:#2e96c6">**Astronomy Data And Computing Services**</span>
+
+<span style="color:#2e96c6">**Curtin Institute for Computation**</span>
+
+```{r, echo=F}
+print(lubridate::today())
+```
+
+![cic_logo](img/cic.png)
+
+???
+
+Presenter notes go here
+
+---
+class: inverse, center, middle
+
+# Outline
+
+Intro to Ansible 
+
+Concepts
+
+Examples, Demo & Code-Along
+
+Troubleshooting
+
+Questions & Helpful Resources
+
+---
+# What is Ansible?
+
+## requirements
+
+
+---
+
+# Concepts
+
+- inventory
+- playbook
+- Yaml
+  - jinja syntax
+
+- become: true -> become root user
+- variables
+- tasks
+- handlers
+- environment variables -> e.g. bash profile
+
+
+---
+# Inventory files
+
+---
+# Writing Playbooks
+
+--
+
+incremental slide
+
+--
+
+- bullet point
+
+---
+
+# R Code
+
+```{r comment='#'}
+# a boring regression
+fit = lm(dist ~ 1 + speed, data = cars)
+coef(summary(fit))
+dojutsu = c('地爆天星', '天照', '加具土命', '神威', '須佐能乎', '無限月読')
+grep('天', dojutsu, value = TRUE)
+```
+
+---
+
+# R Plots
+
+```{r cars, fig.height=4, dev='svg'}
+par(mar = c(4, 4, 1, .1))
+plot(cars, pch = 19, col = 'darkgray', las = 1)
+abline(fit, lwd = 2)
+```
+
+---
+
+# Tables
+
+If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
+
+```{r}
+knitr::kable(head(iris), format = 'html')
+```
