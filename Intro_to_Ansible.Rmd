@@ -5,7 +5,7 @@ date: "28/05/2021"
 output:
   xaringan::moon_reader:
     seal: false
-    css: ["default", "rladies", "rladies-fonts"]
+    css: [default, kunoichi, default-fonts]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -18,7 +18,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<center> <h1> Intro to Ansible </h1> </center>
+<center> <h1> Intro to Ansible </h1> 
+![](https://upload.wikimedia.org/wikipedia/commons/0/05/Ansible_Logo.png)
+</center>
 <center> <h2>Subtitle</h2> </center>
 <p>
 &nbsp;
@@ -27,13 +29,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
  [**Rebecca Lange**](mailto:rebecca.lange@curtin.edu.au)
 
-<span style="color:#2e96c6">**Astronomy Data And Computing Services**</span>
-
+<span style="color:#CC3333">**Astronomy Data And Computing Services**</span> & 
 <span style="color:#2e96c6">**Curtin Institute for Computation**</span>
 
-```{r, echo=F}
-print(lubridate::today())
-```
+???
+
+"color:#2e96c6" - CIC
 
 ![cic_logo](img/cic.png)
 
@@ -61,6 +62,8 @@ class: middle
 
 # What is Ansible?
 
+
+
 > _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the SSH protocol). <small><sup>1</sup></small>
 
 > It uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allows you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
@@ -77,6 +80,10 @@ class: middle
 > It uses **no agents and no additional custom security infrastructure**, so it's easy to deploy - and most importantly, it uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allow you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
 
 <small><sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</small>
+
+---
+
+# Why use Ansible
 
 ---
 
@@ -100,6 +107,7 @@ class: middle
 ---
 
 ## Installation
+See [documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#) for details
 
 `ansible`
 - Includes the Ansible language and runtime plus a range of community curated Collections
@@ -107,9 +115,8 @@ class: middle
 
 `ansible-core`
 - Contains the Ansible language, runtime, and a short list of core modules and other plugins
-- Install ansible-core (version 2.11 and greater) or ansible-base (version 2.10) with `pip`, or from source from the ansible/ansible GitHub repository(development version)
+- Install with `pip` or from source from the ansible/ansible GitHub repository (development version)
 
-[Installing with `pip`](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip])
 ```{python, eval=F}
 # to install ansible
 python -m pip install --user ansible
@@ -118,25 +125,42 @@ python -m pip install --user ansible
 pip install ansible-core
 ```
 
+???
+
+check that `~/.local/bin/` is added to the `$PATH`
+
+one can add arg complete
+
+```{bash, eval=F}
+python -m pip install argcomplete
+sudo activate-global-python-argcomplete
+```
+
 
 ---
 
 # Concepts
 
-- inventory
-- playbook
+.pull-left[
+- Module
+- Inventory
+- Playbook
 - Yaml
   - jinja syntax
+  ]
 
+.pull-right[
 - become: true -> become root user
 - variables
 - tasks
 - handlers
 - environment variables -> e.g. bash profile
-
+]
 
 ---
 # Inventory files
+
+
 
 ---
 # Writing Playbooks
