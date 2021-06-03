@@ -1,11 +1,11 @@
 ---
 title: "Intro to Ansible"
 author: "Rebecca Lange"
-date: "28/05/2021"
+date: "28/05/2021 updated: `r format(Sys.time(), '%d/%m/%Y')`"
 output:
   xaringan::moon_reader:
     seal: false
-    css: [default, kunoichi, default-fonts]
+    css: [ kunoichi_custom.css, default, default-fonts]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -29,8 +29,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
  [**Rebecca Lange**](mailto:rebecca.lange@curtin.edu.au)
 
-<span style="color:#CC3333">**Astronomy Data And Computing Services**</span> & 
-<span style="color:#2e96c6">**Curtin Institute for Computation**</span>
+```{r, echo=FALSE, results='asis'} 
+cat(format(Sys.time(), '%d/%m/%Y'))
+```
+
+**Astronomy Data And Computing Services & Curtin Institute for Computation**
 
 ???
 
@@ -58,11 +61,12 @@ Troubleshooting
 Questions & Helpful Resources
 
 ---
-class: middle
+class: inverse, center, middle
 
 # What is Ansible?
 
-
+---
+class: middle
 
 > _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the SSH protocol). <small><sup>1</sup></small>
 
@@ -82,60 +86,106 @@ class: middle
 <small><sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</small>
 
 ---
+class: inverse, center, middle
 
 # Why use Ansible
 
----
+???
 
-## Requirements
+On snowflakes and shell scripts
 
-**Control Node**
-- Python > v3.5, 
-  - ansible-core 2.12 and Ansible 5.0.0 will require Python 3.8
-- Windows is _not_ supported for the control node
-- YAML
-- SSH and SFTP
-
-**Managed Node**
-- SSH and SFTP
-  - if SFTP not available -> switch to SCP
-- Python if possible
-
-**Documentation** 
- - https://docs.ansible.com/
+Many developers and system administrators manage servers by logging into them via SSH, making changes, and logging off. Some of these changes would be documented, some would not. If an admin needed to make the same change to many servers (for example, changing one value in a config file), the admin would manually log into each server and repeatedly make this change.
 
 ---
+class: middle
 
-## Installation
-See [documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#) for details
+![](img/why1.png)
 
-`ansible`
-- Includes the Ansible language and runtime plus a range of community curated Collections
-- Install the latest release with your OS package manager or with `pip`
+.footnote[Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)]
 
-`ansible-core`
-- Contains the Ansible language, runtime, and a short list of core modules and other plugins
-- Install with `pip` or from source from the ansible/ansible GitHub repository (development version)
+---
+class: middle
 
-```{python, eval=F}
-# to install ansible
-python -m pip install --user ansible
+![](img/why2.png)
 
-# to install ansible-core
-pip install ansible-core
-```
+.footnote[Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)]
+
+---
+class: middle
+
+## What Ansible Can Do?
+
+![](https://image.slidesharecdn.com/mdansible-3-4-24-170412173627/95/ansible-5-638.jpg?cb=1492018678)
+
+---
+
+
+**Provisioning** - What Is Ansible - Edureka
+Provisioning: Your apps have to live somewhere. If you’re PXE (Preboot eXecution Environment) booting and kick starting bare-metal servers or Virtual Machines, or creating virtual or cloud instances from templates, Ansible & Ansible Tower helps to streamline this process. For example, if I want to test the debug version of an application that is built with Visual C++, I ought to meet some prerequisite requirements like having Visual C++ library DLLs (msvcr100d.dll). I will also need Visual Studio installed in your computer. This is when Ansible makes sure that the required packages are downloaded and installed in order to provision my application.
+
+**Configuration Management** - What Is Ansible - Edureka
+Configuration Management: It establishes and maintains consistency of the product performance by recording and updating detailed information which describes an enterprise’s hardware and software. Such information typically includes the versions and updates that have been applied to installed software packages and the locations and network addresses of hardware devices. For e.g. If you want to install the new version of Tomcat on all of the machines present in your enterprise, it is not feasible for you to manually go and update each and every machine. You can install Tomcat in one go on all of your machines with Ansible playbooks and inventory written in the most simple way. All you have to  do is list out the IP addresses of your nodes in the inventory and write a playbook to install Tomcat. Run the playbook from your control machine & it will be installed on all your nodes.
+
+Application Deployment: When you define your application with Ansible, and manage the deployment with Ansible Tower, teams are able to effectively manage the entire application life cycle from development to production. For example, let’s say I want to deploy the Default Servlet Engine. There are a number of steps that needs to be undergone to deploy the engine. 
+
+-    Move a .war application from dropins directory to apps directory
+-    Add server.xml file
+-    Navigate to the webpage to see your application.
+
+But why worry about performing these steps one by one when we have a tool like Ansible. All you need to do is list these tasks in your Ansible playbook and sit back watching Ansible executing these tasks in order.
+
+Security - What Is Ansible - Edureka
+
+Security and Compliance: When you define your security policy in Ansible, scanning and remediation of site-wide security policy can be integrated into other automated processes. And it’ll be integral in everything that is deployed. It means that, you need to configure your security details once in your control machine and it will be embedded in all other nodes automatically. Moreover, all the credentials (admin users id’s & passwords) that are stored within Ansible are not retrievable in plain-text by any user. 
+
+Orchestration - What Is Ansible -Edureka
+Orchestration: Configurations alone don’t define your environment. You need to define how multiple configurations interact and ensure the disparate pieces can be managed as a whole. Out of complexity and chaos, Ansible brings order. Ansible provides Orchestration in the sense of aligning the business request with the applications, data, and infrastructure. It defines the policies and service levels through automated workflows, provisioning, and change management. This creates an application-aligned infrastructure that can be scaled up or down based on the needs of each application. 
+
+
+https://www.edureka.co/blog/what-is-ansible/#why_do_we_need_ansible
+
+---
+class: middle
+
+## How Ansible works
+
+![](https://geekflare.com/wp-content/uploads/2019/06/how-ansible-works-1.png)
+
+---
+
+# Ansible Tower
+
+---
+class: inverse, center, middle
+
+# Concepts
+
+---
+class: middle 
+
+**Controller Machine / Control Node **: The machine where Ansible is installed, responsible for running the provisioning on the servers you are managing.
+
+**Managed Node**: The machine(s) on which executes plays.
+    
+**Inventory**: An initialization file that contains information about the servers you are managing.
+
+**Playbook**: The entry point for Ansible provisioning, where the automation is defined through tasks using YAML format.
+
+**Task**: A block that defines a single procedure to be executed, e.g. Install a package.
+
+**Module**: A module typically abstracts a system task, like dealing with packages or creating and changing files. Ansible has a multitude of built-in modules, but you can also create custom ones.
+ 
+ **Role**: A pre-defined way for organizing playbooks and other files in order to facilitate sharing and reusing portions of a provisioning.
+
+**Play**: A provisioning executed from start to finish is called a play. In simple words, execution of a playbook is called a play.
+
+**Facts**: Global variables containing information about the system, like network interfaces or operating system.
+
+**Handlers**: Used to trigger service status changes, like restarting or stopping a service.
 
 ???
 
-check that `~/.local/bin/` is added to the `$PATH`
-
-one can add arg complete
-
-```{bash, eval=F}
-python -m pip install argcomplete
-sudo activate-global-python-argcomplete
-```
-
+https://www.edureka.co/blog/what-is-ansible/#why_do_we_need_ansible
 
 ---
 
@@ -174,16 +224,65 @@ incremental slide
 - bullet point
 
 ---
+class: inverse, center, middle
 
-# R Code
+# Examples, Demo & Code-Along
 
-```{r comment='#'}
-# a boring regression
-fit = lm(dist ~ 1 + speed, data = cars)
-coef(summary(fit))
-dojutsu = c('地爆天星', '天照', '加具土命', '神威', '須佐能乎', '無限月読')
-grep('天', dojutsu, value = TRUE)
+---
+
+# Requirements
+
+**Control Node**
+- Python > v3.5, 
+  - ansible-core 2.12 and Ansible 5.0.0 will require Python 3.8
+- Windows is _not_ supported for the control node
+- YAML
+- SSH and SFTP
+
+**Managed Node**
+- SSH and SFTP
+  - if SFTP not available -> switch to SCP
+- Python if possible
+
+**Documentation** 
+ - https://docs.ansible.com/
+
+---
+
+# Installation
+See [documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#) for details
+
+`ansible`
+- Includes the Ansible language and runtime plus a range of community curated Collections
+- Install the latest release with your OS package manager or with `pip`
+
+`ansible-core`
+- Contains the Ansible language, runtime, and a short list of core modules and other plugins
+- Install with `pip` or from source from the ansible/ansible GitHub repository (development version)
+
+```{bash, eval=F}
+# to install ansible
+python -m pip install --user ansible
+
+# to install ansible-core
+pip install ansible-core
 ```
+
+???
+
+check that `~/.local/bin/` is added to the `$PATH`
+
+one can add arg complete
+
+```{bash, eval=F}
+python -m pip install argcomplete
+sudo activate-global-python-argcomplete
+```
+
+---
+class: inverse, middle, center
+
+# Example 1
 
 ---
 
@@ -192,7 +291,7 @@ grep('天', dojutsu, value = TRUE)
 ```{r cars, fig.height=4, dev='svg'}
 par(mar = c(4, 4, 1, .1))
 plot(cars, pch = 19, col = 'darkgray', las = 1)
-abline(fit, lwd = 2)
+
 ```
 
 ---
