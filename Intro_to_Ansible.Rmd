@@ -5,12 +5,14 @@ date: "28/05/2021 updated: `r format(Sys.time(), '%d/%m/%Y')`"
 output:
   xaringan::moon_reader:
     seal: false
-    css: [ kunoichi_custom.css, default, default-fonts]
+    css: [ rutgers, default, default-fonts]
     lib_dir: libs
     nature:
+      beforeInit: "macros.js"
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      slideNumberFormat: ""
     yolo: false
 ---
 
@@ -21,19 +23,19 @@ knitr::opts_chunk$set(echo = TRUE)
 <center> <h1> Intro to Ansible </h1> 
 ![](https://upload.wikimedia.org/wikipedia/commons/0/05/Ansible_Logo.png)
 </center>
-<center> <h2>Subtitle</h2> </center>
+<center> <h2>*Subtitle*</h2> </center>
 <p>
 &nbsp;
 &nbsp;
 </p>
 
  [**Rebecca Lange**](mailto:rebecca.lange@curtin.edu.au)
+ 
+**Astronomy Data And Computing Services & Curtin Institute for Computation**
 
 ```{r, echo=FALSE, results='asis'} 
-cat(format(Sys.time(), '%d/%m/%Y'))
+cat(paste("updated:", format(Sys.time(), '%d/%m/%Y')))
 ```
-
-**Astronomy Data And Computing Services & Curtin Institute for Computation**
 
 ???
 
@@ -56,26 +58,27 @@ Concepts
 
 Examples, Demo & Code-Along
 
-Troubleshooting
+Testing & Troubleshooting
 
 Questions & Helpful Resources
 
 ---
 class: inverse, center, middle
 
-# What is Ansible?
+# Introduction to Ansible
 
 ---
-class: middle
+class: middle, center
 
-> _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the SSH protocol). <small><sup>1</sup></small>
+> _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the **SSH** protocol). <small><sup>1</sup></small>
 
 > It uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allows you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
 
 
-<small><sup>1</sup> [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)</small>
+.footnote[<small><sup>1</sup> [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)</br>
+<sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</small>]
 
-<small><sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</small>
+
 
 ???
 
@@ -88,7 +91,16 @@ class: middle
 ---
 class: inverse, center, middle
 
-# Why use Ansible
+## Ansible use cases
+
+
+---
+
+.left[![:scale 70%](img/why1.png)]
+
+.right[![:scale 70%](img/why2.png)]
+
+.footnote[<small>Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)</small>]
 
 ???
 
@@ -96,53 +108,30 @@ On snowflakes and shell scripts
 
 Many developers and system administrators manage servers by logging into them via SSH, making changes, and logging off. Some of these changes would be documented, some would not. If an admin needed to make the same change to many servers (for example, changing one value in a config file), the admin would manually log into each server and repeatedly make this change.
 
----
-class: middle
+[from Ansible for DevOps]
 
-![](img/why1.png)
-
-.footnote[Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)]
 
 ---
 class: middle
 
-![](img/why2.png)
+![:scale 150%](https://image.slidesharecdn.com/mdansible-3-4-24-170412173627/95/ansible-5-638.jpg?cb=1492018678)
 
-.footnote[Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)]
+???
 
----
-class: middle
+**Provisioning** - make sure a server, VM, computer is set up using required OS and packages
 
-## What Ansible Can Do?
+**Configuration Management** - check package/OS/application status and run required updates
 
-![](https://image.slidesharecdn.com/mdansible-3-4-24-170412173627/95/ansible-5-638.jpg?cb=1492018678)
+**Application Deployment** - configure target VM/server/computer and copy required files/software, and check deployement success.
 
----
+**Continuous Deployment** - combine with a continuous integration (CI) system to deploy a staging env; a production env on succesfully passed tests, check out from version control, CI server or package mirror.
 
+**Security** - configure security details on control node and embed into all manage nodes automatically to investigate and respond to threats across all nodes.
 
-**Provisioning** - What Is Ansible - Edureka
-Provisioning: Your apps have to live somewhere. If you’re PXE (Preboot eXecution Environment) booting and kick starting bare-metal servers or Virtual Machines, or creating virtual or cloud instances from templates, Ansible & Ansible Tower helps to streamline this process. For example, if I want to test the debug version of an application that is built with Visual C++, I ought to meet some prerequisite requirements like having Visual C++ library DLLs (msvcr100d.dll). I will also need Visual Studio installed in your computer. This is when Ansible makes sure that the required packages are downloaded and installed in order to provision my application.
-
-**Configuration Management** - What Is Ansible - Edureka
-Configuration Management: It establishes and maintains consistency of the product performance by recording and updating detailed information which describes an enterprise’s hardware and software. Such information typically includes the versions and updates that have been applied to installed software packages and the locations and network addresses of hardware devices. For e.g. If you want to install the new version of Tomcat on all of the machines present in your enterprise, it is not feasible for you to manually go and update each and every machine. You can install Tomcat in one go on all of your machines with Ansible playbooks and inventory written in the most simple way. All you have to  do is list out the IP addresses of your nodes in the inventory and write a playbook to install Tomcat. Run the playbook from your control machine & it will be installed on all your nodes.
-
-Application Deployment: When you define your application with Ansible, and manage the deployment with Ansible Tower, teams are able to effectively manage the entire application life cycle from development to production. For example, let’s say I want to deploy the Default Servlet Engine. There are a number of steps that needs to be undergone to deploy the engine. 
-
--    Move a .war application from dropins directory to apps directory
--    Add server.xml file
--    Navigate to the webpage to see your application.
-
-But why worry about performing these steps one by one when we have a tool like Ansible. All you need to do is list these tasks in your Ansible playbook and sit back watching Ansible executing these tasks in order.
-
-Security - What Is Ansible - Edureka
-
-Security and Compliance: When you define your security policy in Ansible, scanning and remediation of site-wide security policy can be integrated into other automated processes. And it’ll be integral in everything that is deployed. It means that, you need to configure your security details once in your control machine and it will be embedded in all other nodes automatically. Moreover, all the credentials (admin users id’s & passwords) that are stored within Ansible are not retrievable in plain-text by any user. 
-
-Orchestration - What Is Ansible -Edureka
-Orchestration: Configurations alone don’t define your environment. You need to define how multiple configurations interact and ensure the disparate pieces can be managed as a whole. Out of complexity and chaos, Ansible brings order. Ansible provides Orchestration in the sense of aligning the business request with the applications, data, and infrastructure. It defines the policies and service levels through automated workflows, provisioning, and change management. This creates an application-aligned infrastructure that can be scaled up or down based on the needs of each application. 
+**Orchestration** - manage multiple nodes and make sure front/backend services, databases, storage, etc are configured properly and in the correct order to run your service
 
 
-https://www.edureka.co/blog/what-is-ansible/#why_do_we_need_ansible
+See https://www.ansible.com/use-cases
 
 ---
 class: middle
@@ -153,7 +142,7 @@ class: middle
 
 ---
 
-# Ansible Tower
+## Ansible Tower
 
 ---
 class: inverse, center, middle
@@ -161,9 +150,8 @@ class: inverse, center, middle
 # Concepts
 
 ---
-class: middle 
 
-**Controller Machine / Control Node **: The machine where Ansible is installed, responsible for running the provisioning on the servers you are managing.
+**Control Node**: The machine where Ansible is installed, responsible for running the provisioning on the servers you are managing.
 
 **Managed Node**: The machine(s) on which executes plays.
     
@@ -181,7 +169,7 @@ class: middle
 
 **Facts**: Global variables containing information about the system, like network interfaces or operating system.
 
-**Handlers**: Used to trigger service status changes, like restarting or stopping a service.
+**Handlers**: Used to trigger service status changes, like restarting or stopping.
 
 ???
 
@@ -189,39 +177,18 @@ https://www.edureka.co/blog/what-is-ansible/#why_do_we_need_ansible
 
 ---
 
-# Concepts
+## Concepts
 
 .pull-left[
-- Module
-- Inventory
-- Playbook
 - Yaml
-  - jinja syntax
+- Ansible uses Jinja2 templating to enable dynamic expressions and access to variables
   ]
 
 .pull-right[
-- become: true -> become root user
-- variables
-- tasks
-- handlers
+- privilege escalation -> become: true 
 - environment variables -> e.g. bash profile
+- [including and importing](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse.html#playbooks-reuse), dynamic vs static
 ]
-
----
-# Inventory files
-
-
-
----
-# Writing Playbooks
-
---
-
-incremental slide
-
---
-
-- bullet point
 
 ---
 class: inverse, center, middle
@@ -230,7 +197,7 @@ class: inverse, center, middle
 
 ---
 
-# Requirements
+## Requirements
 
 **Control Node**
 - Python > v3.5, 
@@ -249,7 +216,7 @@ class: inverse, center, middle
 
 ---
 
-# Installation
+## Installation
 See [documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#) for details
 
 `ansible`
@@ -280,26 +247,69 @@ sudo activate-global-python-argcomplete
 ```
 
 ---
+## Inventory files
+
+
+
+---
+## Playbooks
+
+--
+
+incremental slide
+
+--
+
+- bullet point
+
+---
 class: inverse, middle, center
 
-# Example 1
+## Example 1
+
+---
+class: inverse, center, middle
+
+# Testing & Troubleshooting
 
 ---
 
-# R Plots
+## Linters
 
-```{r cars, fig.height=4, dev='svg'}
-par(mar = c(4, 4, 1, .1))
-plot(cars, pch = 19, col = 'darkgray', las = 1)
+___
+## syntax checking
 
-```
+___
+## Molecule
+
+___
+## Parallel infrastructure
+
+---
+class: inverse, center, middle
+
+# Questions & Helpful Resources
+
 
 ---
 
-# Tables
+## Links
 
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
+**Jeff Geerling's 'Ansible for DevOps':**
+- [Ansible for DevOps book](https://www.ansiblefordevops.com/)
+- [Ansible 101 on youtube](https://www.youtube.com/playlist?list=PL2_OBreMn7FqZkvMYt6ATmgC0KAGGJNAN)
+- [Github repo](https://github.com/geerlingguy/ansible-for-devops) of examples from the book
 
-```{r}
-knitr::kable(head(iris), format = 'html')
-```
+**Ansible Documentation:**
+- [Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html_)
+- [Intro to Playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#)
+- [Molecule](https://molecule.readthedocs.io/en/latest/)- [Testing your Ansible roles with Molecule](https://www.jeffgeerling.com/blog/2018/testing-your-ansible-roles-molecule)
+- [Ansible Lint](https://ansible-lint.readthedocs.io/en/latest/)
+
+
+**Other**
+- TechWorld with Nana: [What is Ansible](https://www.youtube.com/watch?v=1id6ERvfozo)
+- [yamllint](https://yamllint.readthedocs.io/en/stable/)
+- 
+
+
