@@ -251,10 +251,19 @@ ansible-palybook playbook.yml --syntax-check
 
 ## Inventory Example
 
-- can be aliased
-The inventory file can be in one of many formats, depending on the inventory plugins you have
+The inventory file can be in one of many formats, for example INI:
 
+![](host_example.png)
 
+???
+
+- hosts can be grouped -> [group-name]
+- you can specify numeric or alphabetical ranges, 
+  - leading zeros can be included, 
+  - ranges are inclusive
+- hosts can be aliased
+- you can specify connection type, and user on per-host basis
+- if you run on a non standrad ssh port, specify after hostname with colon
 
 ---
 class: inverse, center, middle
