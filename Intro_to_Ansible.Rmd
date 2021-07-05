@@ -68,15 +68,20 @@ class: inverse, center, middle
 # Introduction to Ansible
 
 ---
-class: middle, center
+class: middle
 
 > _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the **SSH** protocol). <small><sup>1</sup></small>
 
 > It uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allows you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
 
+> One of Ansible’s greatest strengths is its ability to **run regular shell commands verbatim**, so you can take existing scripts and commands and work on converting them into idempotent playbooks as time allows.<small><sup>3</sup></small>
+
 
 .footnote[<small><sup>1</sup> [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)</br>
-<sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</small>]
+<sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</br>
+<sup>3</sup> [Ansible for DevOps book](https://www.ansiblefordevops.com/)
+</small>]
+
 
 
 
@@ -142,28 +147,33 @@ class: middle
 
 ---
 
-## Ansible Tower
-
----
 class: inverse, center, middle
 
 # Concepts
 
 ---
+class: middle
+
+**Ansible Tower**:It is a web-based solution for managing your organization with a very easy user interface that provides a dashboard with state summaries of all the hosts, allows quick deployments, and monitors all configurations.
+
+**Ansible Galaxy**: a repository for Ansible Roles that are available to drop directly into your Playbooks to streamline your automation projects.
 
 **Control Node**: The machine where Ansible is installed, responsible for running the provisioning on the servers you are managing.
 
-**Managed Node**: The machine(s) on which executes plays.
-    
-**Inventory**: An initialization file that contains information about the servers you are managing.
+**Managed Node**: The machine(s) on which play are executed.
 
-**Playbook**: The entry point for Ansible provisioning, where the automation is defined through tasks using YAML format.
+**Inventory**: A file containing information about the managed servers.
+
+**Playbook**: The entry point for Ansible provisioning, where the automation is defined through tasks using YAML format. Your "instruction manual".
+
+---
+class: middle
 
 **Task**: A block that defines a single procedure to be executed, e.g. Install a package.
 
-**Module**: A module typically abstracts a system task, like dealing with packages or creating and changing files. Ansible has a multitude of built-in modules, but you can also create custom ones.
+**Module**: Modules are "tools in the toolkit" and execute code (e.g. python, shell, etc) which gets pushed out to the managed nodes. Ansible has a multitude of built-in modules, but you can also create custom ones.
  
- **Role**: A pre-defined way for organizing playbooks and other files in order to facilitate sharing and reusing portions of a provisioning.
+ **Role**: Roles are sets of Ansible defaults, files, tasks, templates, variables, and other Ansible components that work together and are saved in a named directory strucutre.
 
 **Play**: A provisioning executed from start to finish is called a play. In simple words, execution of a playbook is called a play.
 
@@ -175,20 +185,91 @@ class: inverse, center, middle
 
 https://www.edureka.co/blog/what-is-ansible/#why_do_we_need_ansible
 
+https://dzone.com/articles/getting-started-with-ansible-tower-hands-on
+
+https://www.redhat.com/sysadmin/ansible-galaxy-intro
+
 ---
 
-## Concepts
+# How to write Playbooks and Inventories
 
-.pull-left[
-- Yaml
-- Ansible uses Jinja2 templating to enable dynamic expressions and access to variables
-  ]
+Playbooks are written in **YAML**
 
-.pull-right[
-- privilege escalation -> become: true 
-- environment variables -> e.g. bash profile
+They execute specified **Tasks** in sequence, invoking **Ansible modules**.
+
+The tasks are run on the **managed nodes** specified in the **inventory**.
+
+Ansible uses **Jinja2 templating** to enable dynamic expressions and access to variables
+
+---
+class: middle
+
+## Playbook Example 1
+
+![](example1.png)
+
+???
+
+- the `name` field is human readable comments (optional)
+- `host` specifies which host group is targeted, group specified in the inventory
+- `vars` can be specified at the beginning of the playbook, on the command line, separate file
+  - environment variables -> e.g. bash profile
+- `remote_user` idendity which will perfomr the tasks, could be just one or multiple, or different identity for different tasks
+  - privilege escalation -> become: true 
+- work gets done in `modules` with `key=value` format
 - [including and importing](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse.html#playbooks-reuse), dynamic vs static
+
+---
+class: middle
+
+## Playbook Example 2
+
+![:scale 50%](example2.png)
+
+???
+
+- `handlers` are task that are referenced globaly by a unique name
+  - only get run when they are `notified`
+  - only run after all other plays in a playbook are run -> even if they are called several times they will only be run once at the end
+
+---
+class: middle
+
+## YAML syntax tips
+.pull-left[
+![:scale 150%](example3_1.png)
 ]
+.pull-right[
+![:scale 70%](example3_2.png)
+]
+
+```{bash eval=FALSE}
+ansible-palybook playbook.yml --syntax-check
+```
+
+---
+
+## Inventory Example
+
+- can be aliased
+The inventory file can be in one of many formats, depending on the inventory plugins you have
+
+
+
+---
+class: inverse, center, middle
+
+## Testing & Troubleshooting
+
+---
+
+### Linters and syntax checking
+
+---
+### Molecule
+
+___
+## Parallel infrastructure
 
 ---
 class: inverse, center, middle
@@ -246,44 +327,12 @@ python -m pip install argcomplete
 sudo activate-global-python-argcomplete
 ```
 
----
-## Inventory files
-
-
-
----
-## Playbooks
-
---
-
-incremental slide
-
---
-
-- bullet point
 
 ---
 class: inverse, middle, center
 
 ## Example 1
 
----
-class: inverse, center, middle
-
-# Testing & Troubleshooting
-
----
-
-## Linters
-
-___
-## syntax checking
-
-___
-## Molecule
-
-___
-## Parallel infrastructure
 
 ---
 class: inverse, center, middle
@@ -301,15 +350,18 @@ class: inverse, center, middle
 - [Github repo](https://github.com/geerlingguy/ansible-for-devops) of examples from the book
 
 **Ansible Documentation:**
-- [Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html_)
-- [Intro to Playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#)
-- [Molecule](https://molecule.readthedocs.io/en/latest/)- [Testing your Ansible roles with Molecule](https://www.jeffgeerling.com/blog/2018/testing-your-ansible-roles-molecule)
-- [Ansible Lint](https://ansible-lint.readthedocs.io/en/latest/)
-
+- [Installation Guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html_) and [Getting Started with Ansible](https://www.ansible.com/resources/get-started)
+- [Intro to Playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#) and [Ansible Example Playbooks on GitHub](https://github.com/ansible/ansible-examples)
+- [Ansible Glossary](https://docs.ansible.com/ansible/latest/reference_appendices/glossary.html) 
 
 **Other**
-- TechWorld with Nana: [What is Ansible](https://www.youtube.com/watch?v=1id6ERvfozo)
+- [Molecule](https://molecule.readthedocs.io/en/latest/) and [Testing your Ansible roles with Molecule](https://www.jeffgeerling.com/blog/2018/testing-your-ansible-roles-molecule)
+- [Ansible Lint](https://ansible-lint.readthedocs.io/en/latest/)
 - [yamllint](https://yamllint.readthedocs.io/en/stable/)
-- 
+
+- [What is Ansible](https://www.youtube.com/watch?v=1id6ERvfozo) - TechWorld with Nana
+- [The Bullhorn](https://us19.campaign- archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420) - Ansible’s official newsletter.
+- [Ansible Mailing List on Google Groups](https://groups.google.com/forum/#!forum/ansible-project)
+- [Ansible Blog](https://www.ansible.com/blog)
 
 
