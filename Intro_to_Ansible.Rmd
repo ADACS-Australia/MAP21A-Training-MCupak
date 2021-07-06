@@ -56,11 +56,13 @@ Intro to Ansible
 
 Concepts
 
-Examples, Demo & Code-Along
+How To Examples
 
 Testing & Troubleshooting
 
-Questions & Helpful Resources
+Demo & Code-Along
+
+Helpful Resources
 
 ---
 class: inverse, center, middle
@@ -87,6 +89,10 @@ class: middle
 
 ???
 
+Ansible is an agentless automation tool which remotely manages machines over the ssh protocol.
+Ansible uses YAML in its playbook, making it easy to describe your automation jobs.
+It is easy to get started with Ansible since you can regular shell commands, so you can take existing scripts and convert them step by step.
+
 > Ansible is a radically simple **IT automation engine** that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.<small><sup>2</sup></small>
 
 > It uses **no agents and no additional custom security infrastructure**, so it's easy to deploy - and most importantly, it uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allow you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
@@ -111,15 +117,26 @@ class: inverse, center, middle
 
 On snowflakes and shell scripts
 
-Many developers and system administrators manage servers by logging into them via SSH, making changes, and logging off. Some of these changes would be documented, some would not. If an admin needed to make the same change to many servers (for example, changing one value in a config file), the admin would manually log into each server and repeatedly make this change.
+Many developers and system administrators manage servers by **logging into them via SSH, making changes, and logging off**. Some of these changes would be documented, some would not. 
+
+If an admin needed to make the same change to **many servers** (for example, changing one value in a config file), the admin would **manually log into each server** and repeatedly make this change.
 
 [from Ansible for DevOps]
 
+This raises the risk of introducing errors
+
+Ansible lets you automate these repetitive tasks, like <see slide>, and in the form of playbooks also documents your workflow.
+
+**Idempotence** is the ability to run an operation which produces the same
+result whether run once or multiple times
 
 ---
 class: middle
 
 ![:scale 150%](https://image.slidesharecdn.com/mdansible-3-4-24-170412173627/95/ansible-5-638.jpg?cb=1492018678)
+
+
+.footnote[See https://www.ansible.com/use-cases]
 
 ???
 
@@ -145,6 +162,15 @@ class: middle
 
 ![](https://geekflare.com/wp-content/uploads/2019/06/how-ansible-works-1.png)
 
+???
+
+from the control/management node Ansible takes
+- instructions in a playbook
+- inventory of hosts
+and then 
+- ssh into each host 
+- carrying out the specified tasks
+
 ---
 
 class: inverse, center, middle
@@ -154,17 +180,18 @@ class: inverse, center, middle
 ---
 class: middle
 
-**Ansible Tower**:It is a web-based solution for managing your organization with a very easy user interface that provides a dashboard with state summaries of all the hosts, allows quick deployments, and monitors all configurations.
-
-**Ansible Galaxy**: a repository for Ansible Roles that are available to drop directly into your Playbooks to streamline your automation projects.
-
 **Control Node**: The machine where Ansible is installed, responsible for running the provisioning on the servers you are managing.
 
-**Managed Node**: The machine(s) on which play are executed.
+**Managed Node**: The machine(s) on which plays are executed.
 
 **Inventory**: A file containing information about the managed servers.
 
-**Playbook**: The entry point for Ansible provisioning, where the automation is defined through tasks using YAML format. Your "instruction manual".
+**Playbook**: Your "instruction manual". The entry point for Ansible provisioning, where the automation is defined through tasks using YAML format. 
+
+**Ansible Tower**: A web-based solution for managing your organization with a very easy user interface that provides a dashboard with state summaries of all the hosts, allows quick deployments, and monitors all configurations.
+
+**Ansible Galaxy**: A repository for Ansible Roles that are available to drop directly into your Playbooks to streamline your automation projects.
+
 
 ---
 class: middle
@@ -173,7 +200,7 @@ class: middle
 
 **Module**: Modules are "tools in the toolkit" and execute code (e.g. python, shell, etc) which gets pushed out to the managed nodes. Ansible has a multitude of built-in modules, but you can also create custom ones.
  
- **Role**: Roles are sets of Ansible defaults, files, tasks, templates, variables, and other Ansible components that work together and are saved in a named directory strucutre.
+ **Role**: Roles are sets of Ansible defaults, files, tasks, templates, variables, and other Ansible components that work together and are saved in a named directory structure.
 
 **Play**: A provisioning executed from start to finish is called a play. In simple words, execution of a playbook is called a play.
 
@@ -210,11 +237,11 @@ class: middle
 
 ???
 
-- the `name` field is human readable comments (optional)
-- `host` specifies which host group is targeted, group specified in the inventory
+- the `name` field is human readable comments (optional) -> this will be printed as output when the playbook runs
+- `host` specifies which host group is targeted, the group is specified in the inventory
 - `vars` can be specified at the beginning of the playbook, on the command line, separate file
   - environment variables -> e.g. bash profile
-- `remote_user` idendity which will perfomr the tasks, could be just one or multiple, or different identity for different tasks
+- `remote_user` identity which will perform the tasks, could be just one or multiple, or different identity for different tasks
   - privilege escalation -> become: true 
 - work gets done in `modules` with `key=value` format
 - [including and importing](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse.html#playbooks-reuse), dynamic vs static
@@ -228,7 +255,7 @@ class: middle
 
 ???
 
-- `handlers` are task that are referenced globaly by a unique name
+- `handlers` are tasks that are referenced globaly by a unique name
   - only get run when they are `notified`
   - only run after all other plays in a playbook are run -> even if they are called several times they will only be run once at the end
 
@@ -242,6 +269,8 @@ class: middle
 .pull-right[
 ![:scale 70%](example3_2.png)
 ]
+
+???
 
 ```{bash eval=FALSE}
 ansible-palybook playbook.yml --syntax-check
@@ -263,27 +292,88 @@ The inventory file can be in one of many formats, for example INI:
   - ranges are inclusive
 - hosts can be aliased
 - you can specify connection type, and user on per-host basis
-- if you run on a non standrad ssh port, specify after hostname with colon
+- if you run on a non standard ssh port, specify after hostname with colon
 
 ---
 class: inverse, center, middle
 
-## Testing & Troubleshooting
+# Testing & Troubleshooting
+
+![:scale 90%](test_spectrum.png)
+
+???
+
+image from Ansible for DevOps book, Jeff Geerling
+---
+
+### Linters and syntax checking
+
+Some common errors in playbooks can arise from **yaml syntax issues**, like too many whitespaces.
+
+[`yamllint`](https://yamllint.readthedocs.io/en/stable/) is a YAML lint tool installable via `pip`, once  installed it can be run on any YAML file in the current directory by passing the path:
+
+```{bash eval=FALSE}
+pip3 install yamllint
+
+# to run yamllint on all YAML files in the current directory 
+yamllint .
+```
+
+???
+
+- it is important to follow a specific style:
+  - it can help prevent mistakes
+  - makes it easier to read files/playbooks
 
 ---
 
 ### Linters and syntax checking
 
+Ansible also has inbuilt syntax checking.
+
+Executing a playbook with `--syntax-check` will not run the plays, instead Asnible checks that everything in the playbook can be (statically*) loaded without fatal errors.
+
+```{bash eval=FALSE}
+ansible-playbook playbook.yml --syntax-check
+```
+
+Combining `yamllint` and `--syntax-check` should form your basic CI tests.
+
+.footnote[*dynamic includes and variables can not be validated with `--syntax-check`]
+
+???
+
+- syntax check will highlight if you are
+  - missing task files
+  - misspelled module names
+  - supply invalid paramters
+
 ---
+
+### Linters and syntax checking
+
+`ansible-lint` can help improve ansible specific style issues.
+
+```{bash eval=FALSE}
+pip3 install ansible-lint
+
+#to run on a playbook
+ansible-lint main.yml
+
+```
+
+
+**TO DO** examples
+---
+
 ### Molecule
 
-___
-## Parallel infrastructure
+**TO DO**
 
 ---
 class: inverse, center, middle
 
-# Examples, Demo & Code-Along
+# Demo & Code-Along
 
 ---
 
