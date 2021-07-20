@@ -346,7 +346,7 @@ Combining `yamllint` and `--syntax-check` should form your basic CI tests.
 - syntax check will highlight if you are
   - missing task files
   - misspelled module names
-  - supply invalid paramters
+  - supply invalid parameters
 
 ---
 
@@ -364,6 +364,8 @@ ansible-lint main.yml
 
 
 **TO DO** examples
+
+p374 (349)
 ---
 
 ### Molecule
@@ -393,11 +395,12 @@ class: inverse, center, middle
 
 **Documentation** 
  - https://docs.ansible.com/
+ - [Installation guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#) 
+
 
 ---
 
 ## Installation
-See [documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#) for details
 
 `ansible`
 - Includes the Ansible language and runtime plus a range of community curated Collections
@@ -413,6 +416,9 @@ python -m pip install --user ansible
 
 # to install ansible-core
 pip install ansible-core
+
+# packages used for examples on Google Cloud
+pip install requests google-auth
 ```
 
 ???
@@ -426,12 +432,109 @@ python -m pip install argcomplete
 sudo activate-global-python-argcomplete
 ```
 
+---
+
+## Set Up
+
+Create a `hosts.ini` file listing the hosts you want to use during this exercise. My file looks like this:
+
+![](hostsini.png)
+
+configure your default ansible parameters in `ansible.cfg` and save it in the root directory of your project. Mine reads:
+
+```
+[defaults]
+inventory=hosts.ini
+```
 
 ---
-class: inverse, middle, center
+class: inverse, middle
 
-## Example 1
+## Example 1 - Remote Monitoring
 
+- Ping hosts
+- Check login works
+- Collect system info
+
+---
+class: middle 
+
+### Ping/Check login works - ad hoc
+
+The ansible `ping` module verifies the ability to login and that a usable Python is configured on the managed node, it is not an ICMP ping.
+
+```{bash, eval=F}
+ansible -i [host filename] [group] -m ping -u [username]\
+--private-key=[file/location]
+```
+![](adhoc-ping.png)
+
+???
+
+ICMP - Internet Control Message Protocol 
+
+```{bash, eval=F}
+ansible -i hosts.ini gcs -m ping -u rebecca_lange_computation_org_au --private-key=~/.ssh/gcloud
+```
+
+---
+class: middle 
+
+### Ping/Check login works - ad hoc
+The `wait_for_connection` module waits until a remote system is reachable/usable and will retry the connecting after a specified amount of time.
+
+
+```{bash, eval=F}
+ansible -i [host filename] [group] -m wait_for_connection
+```
+
+![](adhoc-wait.png)
+
+???
+```{bash, eval=F}
+ansible -i hosts.ini ozstar -m wait_for_connection
+```
+
+---
+
+### Ping/Check login works - playbook
+
+![:scale 65%](ping_example.png)
+![:scale 65%](ping-playbook.png)
+
+---
+class: middle 
+
+### Collect system info - ad hoc
+
+```{bash, eval=F}
+ansible -i [host filename] [group] -a "hostname"
+
+# if the host file name has been set in the ansible.cfg it can be omitted from the command
+ansible [group] -a "df -h" 
+ansible [group] -a "date"
+```
+
+![:scale 65%](adhoc-hostname.png)
+![:scale 65%](adhoc-info.png)
+
+---
+class: inverse, middle
+
+## Example 2 - Remote Configuration
+
+- OS package updates 
+- Modify/Upload config files and service scripts
+- Restart services
+
+
+---
+class: inverse, middle
+
+## Example 3 - Automated Software Update
+
+- pull updates from remote server
+- back-up files on controlled node
 
 ---
 class: inverse, center, middle
@@ -463,4 +566,5 @@ class: inverse, center, middle
 - [Ansible Mailing List on Google Groups](https://groups.google.com/forum/#!forum/ansible-project)
 - [Ansible Blog](https://www.ansible.com/blog)
 
+- [Ansible Playbook Examples](https://www.middlewareinventory.com/blog/ansible-playbook-example/)
 
