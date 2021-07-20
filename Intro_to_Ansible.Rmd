@@ -519,6 +519,15 @@ ansible [group] -a "date"
 ![:scale 65%](adhoc-info.png)
 
 ---
+
+# TO DO
+
+check server status
+
+`check_state.yml`
+
+
+---
 class: inverse, middle
 
 ## Example 2 - Remote Configuration
@@ -527,7 +536,58 @@ class: inverse, middle
 - Modify/Upload config files and service scripts
 - Restart services
 
+---
+class: middle
 
+### Set Up Vagrant VMs
+
+For this we will set up three Vagrant VMs so that we can test our configurations without breaking our production servers.
+<small>
+1. Download and install [Vagrant](https://www.vagrantup.com/downloads) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) (when installing, make sure the command line tools are installed, so Vagrant works with it)
+2. Create a new folder somewhere on your hard drive where you will keep your Vagrantfile and provisioning instructions, e.g. `~/vagrant_vms/`, navigate to this folder in your Terminal.
+3. Copy the `Vagrantfile` from the `Example 2` folder in the github repo into the folder you created in step 2.
+4. The file defines three servers, to boot your CentOS servers run: 
+```
+vagrant up
+```
+
+Note: [HashiCorp’s Vagrant Cloud](https://app.vagrantup.com/boxes/search) has a comprehensive list of different pre-made Linux boxes. You can add and initiate these using:
+```
+vagrant box add [user/boxname]
+vagrant init [user/boxname]
+ ```
+</small>
+
+???
+
+issues with mac: https://medium.com/@Aenon/mac-virtualbox-kernel-driver-error-df39e7e10cd8
+
+---
+
+### Check ansible.cfg and hosts.ini
+
+.pull-left[Navigate back to your `Example 2` working directory and check your `ansible.cfg`.
+It should read 
+
+```
+[defaults]
+inventory=hosts.ini
+```
+]
+
+.pull-right[
+also check your `hosts.ini` file
+![](example2_hosts.png)
+]
+
+Check out Chapter 3 of Ansible for DevOps for ad hoc ocmmands for orchestration.
+
+---
+
+### 
+- OS package updates 
+- Modify/Upload config files and service scripts
+- Restart services
 ---
 class: inverse, middle
 
