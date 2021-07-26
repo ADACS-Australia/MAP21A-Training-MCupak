@@ -304,6 +304,7 @@ class: inverse, center, middle
 ???
 
 image from Ansible for DevOps book, Jeff Geerling
+
 ---
 
 ### Linters and syntax checking
@@ -366,11 +367,20 @@ ansible-lint main.yml
 **TO DO** examples
 
 p374 (349)
+
 ---
 
 ### Molecule
 
 **TO DO**
+
+---
+
+### Profiling
+
+[`profile_task`](https://docs.ansible.com/ansible/2.9/plugins/callback/profile_tasks.html#profile-tasks-adds-time-information-to-tasks) is an Ansible callback plugin for timing individual tasks and overall execution time. 
+
+![](profile_task.png)
 
 ---
 class: inverse, center, middle
@@ -520,11 +530,12 @@ ansible [group] -a "date"
 
 ---
 
-# TO DO
+### Monitor services
 
-check server status
+`monitoring.yml` - sets up a cron job to check system disk space and memory as an example
 
-`check_state.yml`
+`check_state.yml` - checks OS and whether specified services are available. 
+Note: ansible has a `systemd` module which can be used to ensure services are running.
 
 
 ---
@@ -580,18 +591,51 @@ also check your `hosts.ini` file
 ![](example2_hosts.png)
 ]
 
-Check out Chapter 3 of Ansible for DevOps for ad hoc ocmmands for orchestration.
+Check out Chapter 3 of Ansible for DevOps for *ad hoc* commands for orchestration.
+
+**Note:** The default module for the ansible command-line utility is the `ansible.builtin.command` module. This will run the command and specified arguments on each node. However, commands are not processed via the shell, so variables like **`$HOSTNAME`** and operations like **`"*"`, `"|"`**, etc will not work.
 
 ---
 
-### 
-- OS package updates 
-- Modify/Upload config files and service scripts
-- Restart services
+### OS package updates / User set up / Restart service
+
+`group.yml` - example of adding new groups, users and sudo rights
+
+`package.yml` - example of installing packages
+
+The `package` module by default with use existing facts to chose a package manager (e.g. `yum`, `apt`...) and then install the named package.
+
+---
+
+### Modify/Upload config files and service scripts
+
+`shell.yml` - example of how to run shell commands and scripts verbatim
+
+`synchronize.yml` - example of how to use ansible to synchronize (_rsync_) files across the controlled nodes
+
+- to log `Ansible` output set the `log_path` in the config file
+
+???
+
+ansible.cfg now reads
+
+```
+[defaults]
+inventory=hosts.ini
+callback_enabled = profile_tasks
+deprecation_warnings=False
+log_path=ansible_dfnext_upload.log
+display_args_to_stdout=True
+```
+
+```{bash, eval=F} 
+echo "some info to upload" | tee -a upload/wvdial.conf upload/qmi-network.conf upload/network/qmi-network.conf upload/network/interfaces.all upload/network/interfaces.wwan
+```
+
 ---
 class: inverse, middle
 
-## Example 3 - Automated Software Update
+## Example 3 - Automated Software Update - cronjobs
 
 - pull updates from remote server
 - back-up files on controlled node
