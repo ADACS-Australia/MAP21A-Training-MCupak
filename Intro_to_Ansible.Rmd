@@ -532,10 +532,11 @@ ansible [group] -a "date"
 
 ### Monitor services
 
-`monitoring.yml` - sets up a cron job to check system disk space and memory as an example
+**`monitoring.yml`** - sets up a cron job to check system disk space and memory as an example
 
-`check_state.yml` - checks OS and whether specified services are available. 
-Note: ansible has a `systemd` module which can be used to ensure services are running.
+**`check_state.yml`** - checks running services, OS and ssh version 
+
+Note: `ansible` has a `systemd` and a `service` module, which can be used to ensure services are running/enabled.
 
 
 ---
@@ -557,7 +558,7 @@ For this we will set up three Vagrant VMs so that we can test our configurations
 1. Download and install [Vagrant](https://www.vagrantup.com/downloads) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) (when installing, make sure the command line tools are installed, so Vagrant works with it)
 2. Create a new folder somewhere on your hard drive where you will keep your Vagrantfile and provisioning instructions, e.g. `~/vagrant_vms/`, navigate to this folder in your Terminal.
 3. Copy the `Vagrantfile` from the `Example 2` folder in the github repo into the folder you created in step 2.
-4. The file defines three servers, to boot your CentOS servers run: 
+4. The file defines three servers, to boot your Ubuntu servers run: 
 ```
 vagrant up
 ```
@@ -593,39 +594,42 @@ also check your `hosts.ini` file
 
 Check out Chapter 3 of Ansible for DevOps for *ad hoc* commands for orchestration.
 
-**Note:** The default module for the ansible command-line utility is the `ansible.builtin.command` module. This will run the command and specified arguments on each node. However, commands are not processed via the shell, so variables like **`$HOSTNAME`** and operations like **`"*"`, `"|"`**, etc will not work.
+**Note:** The default module for the ansible command-line utility is the `ansible.builtin.command` module. This will run the command and specified arguments on each node. However, commands are not processed via the shell, so variables like **`$HOSTNAME`** and operations like **`"*"`, `"|"`**, etc will not work. use the `shell` module for this.
 
 ---
 
-### OS package updates / User set up / Restart service
+### Remote Config Examples
 
-`group.yml` - example of adding new groups, users and sudo rights
+#### User set up 
 
-`package.yml` - example of installing packages
+**`group.yml`** - example of adding new groups, users and sudo rights
+
+#### Upload config files
+**`shell.yml`** - example of how to run shell commands and scripts verbatim
+
+**`synchronize.yml`** - example of how to use ansible to synchronize (_rsync_) files across the controlled nodes
+
+#### OS package updates / Restart service
+**`package.yml`** - example of installing packages based on the `dfnext_install_socat_qmicli.sh`
+
+#### Logging
+To log `Ansible` output set the `log_path` in the config file
+
+???
+On Mac to create a hashed password install
+`pip install passlib`
+then run
+`python -c "from passlib.hash import sha512_crypt; import getpass; print(sha512_crypt.using(rounds=5000).hash(getpass.getpass()))"`
 
 The `package` module by default with use existing facts to chose a package manager (e.g. `yum`, `apt`...) and then install the named package.
 
----
-
-### Modify/Upload config files and service scripts
-
-`shell.yml` - example of how to run shell commands and scripts verbatim
-
-`synchronize.yml` - example of how to use ansible to synchronize (_rsync_) files across the controlled nodes
-
-- to log `Ansible` output set the `log_path` in the config file
-
-???
-
-ansible.cfg now reads
-
+make sure logging is turned on, set ansible.cfg to
 ```
 [defaults]
 inventory=hosts.ini
-callback_enabled = profile_tasks
 deprecation_warnings=False
+callback_whitelist = profile_tasks
 log_path=ansible_dfnext_upload.log
-display_args_to_stdout=True
 ```
 
 ```{bash, eval=F} 
@@ -635,10 +639,9 @@ echo "some info to upload" | tee -a upload/wvdial.conf upload/qmi-network.conf u
 ---
 class: inverse, middle
 
-## Example 3 - Automated Software Update - cronjobs
+## Example 3 - Setting up roles, handlers and molecule
 
-- pull updates from remote server
-- back-up files on controlled node
+
 
 ---
 class: inverse, center, middle
