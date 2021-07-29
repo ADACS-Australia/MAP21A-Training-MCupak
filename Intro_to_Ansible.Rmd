@@ -23,7 +23,6 @@ knitr::opts_chunk$set(echo = TRUE)
 <center> <h1> Intro to Ansible </h1> 
 ![](https://upload.wikimedia.org/wikipedia/commons/0/05/Ansible_Logo.png)
 </center>
-<center> <h2>*Subtitle*</h2> </center>
 <p>
 &nbsp;
 &nbsp;
@@ -233,7 +232,7 @@ class: middle
 
 ## Playbook Example 1
 
-![](example1.png)
+![](img/example1.png)
 
 ???
 
@@ -251,7 +250,7 @@ class: middle
 
 ## Playbook Example 2
 
-![:scale 50%](example2.png)
+![:scale 50%](img/example2.png)
 
 ???
 
@@ -264,10 +263,10 @@ class: middle
 
 ## YAML syntax tips
 .pull-left[
-![:scale 150%](example3_1.png)
+![:scale 150%](img/example3_1.png)
 ]
 .pull-right[
-![:scale 70%](example3_2.png)
+![:scale 70%](img/example3_2.png)
 ]
 
 ???
@@ -282,7 +281,7 @@ ansible-palybook playbook.yml --syntax-check
 
 The inventory file can be in one of many formats, for example INI:
 
-![](host_example.png)
+![](img/host_example.png)
 
 ???
 
@@ -299,7 +298,7 @@ class: inverse, center, middle
 
 # Testing & Troubleshooting
 
-![:scale 90%](test_spectrum.png)
+![:scale 90%](img/test_spectrum.png)
 
 ???
 
@@ -357,22 +356,89 @@ Combining `yamllint` and `--syntax-check` should form your basic CI tests.
 
 ```{bash eval=FALSE}
 pip3 install ansible-lint
-
 #to run on a playbook
-ansible-lint main.yml
-
+ansible-lint <playbook>.yml
 ```
 
+![:scale 85%](img/ansible-lint.png)
 
-**TO DO** examples
+--
 
-p374 (349)
+![:scale 85%](img/ansible-lint-correct.png)
+
+???
+
+- Add a `name` to the uptime task, to resolve the 502 rule violation.
+- Use the `command` module instead of `shell` for the uptime task, to resolve the 305 rule violation. You should only use the `shell` module when you need advanced capabilities like pipes or redirection.
+- Add `changed_when: false` to the uptime task, to resolve the 301 rule violation.
+Since the task doesn’t change anything on the system, it should be marked as such, to avoid breaking idempotency.
 
 ---
 
 ### Molecule
 
-**TO DO**
+.pull-left[
+So far we've covered _static_ testing, but we don't actually know if the a playbook works in the wild. To avoid running them against our _production_ environment (and breaking things) we could do the following:
+1. Build a new VM.
+2. Configure SSH so I can connect to it.
+3. Set up an inventory so the playbook connects to the VM (and not production!). 
+4. Run my Ansible playbook against the VM.
+5. Test and validate my playbook does what it’s supposed to.
+6. Delete the VM.
+]
+
+--
+
+.pull-right[
+![:scale 30%](https://repository-images.githubusercontent.com/46383942/687a7000-5c7e-11e9-8235-51e9db9bfd68)
+
+[Molecule](https://molecule.readthedocs.io/en/latest/), similar to the above steps, provisions a test host and validates a playbook works. However, it also supports testing on/with multiple instances, operating systems and distributions, test frameworks and testing scenarios.
+
+To install:
+```
+pip3 install molecule
+```
+]
+
+---
+
+#### Molecule example
+
+
+We will follow the example from "Ansible for DevOps" by J. Geerling: 
+ https://github.com/geerlingguy/ansible-for-devops/tree/master/molecule
+
+- We will need `molecule` and `docker` installed (and docker running!)
+- Create a folder, e.g. `molecule_example`, and copy the `main.yml` from the above repo.
+- initialise the scenario `molecule init scenario`
+- delete the `molecule/default/INSTALL.rst` file
+- Make the `Converge` play prepare the environment (see repo)
+- This example needs a docker that can run an init system
+  - we can do this by editing the platforms section in the `molecule.yml` file
+  -  Molecule allows bash-style variables and defaults
+- add a task in `Verify.yml` to check Apache serves web traffic (see repo)
+
+```{bash eval=F}
+pip3 install molecule[docker] docker
+molecule init scenario
+rm molecule/default/INSTALL.rst
+# update files according to repo, then run
+molecule converge # or
+molecule test
+# to check other distros
+MOLECULE_DISTRO=debian10 molecule test
+```
+
+???
+
+- `image` set dynamically defined (maintained by j geerling) and has `systemd` and other packages installed as needed for running services 
+- Override the `command` Molecule sets for the Docker container, so the container image uses its own preconfigured `COMMAND`, which in this case starts the `systemd` init system and keeps the container running.
+- Add a necessary volume mount to allow processes to be managed inside the container.
+- Set the `privileged flag` on the container, so `systemd` can initialize properly.
+- `privileged flag` should be used with care
+
+- When developing or debugging with Molecule, you can run only the verify step using `molecule verify`
+- you can run all configured lint tools with `molecule lint`, instead of running yamllint and ansible-lint separately.
 
 ---
 
@@ -380,7 +446,7 @@ p374 (349)
 
 [`profile_task`](https://docs.ansible.com/ansible/2.9/plugins/callback/profile_tasks.html#profile-tasks-adds-time-information-to-tasks) is an Ansible callback plugin for timing individual tasks and overall execution time. 
 
-![](profile_task.png)
+![](img/profile_task.png)
 
 ---
 class: inverse, center, middle
@@ -448,7 +514,7 @@ sudo activate-global-python-argcomplete
 
 Create a `hosts.ini` file listing the hosts you want to use during this exercise. My file looks like this:
 
-![](hostsini.png)
+![](img/hostsini.png)
 
 configure your default ansible parameters in `ansible.cfg` and save it in the root directory of your project. Mine reads:
 
@@ -477,7 +543,7 @@ The ansible `ping` module verifies the ability to login and that a usable Python
 ansible -i [host filename] [group] -m ping -u [username]\
 --private-key=[file/location]
 ```
-![](adhoc-ping.png)
+![](img/adhoc-ping.png)
 
 ???
 
@@ -498,7 +564,7 @@ The `wait_for_connection` module waits until a remote system is reachable/usable
 ansible -i [host filename] [group] -m wait_for_connection
 ```
 
-![](adhoc-wait.png)
+![](img/adhoc-wait.png)
 
 ???
 ```{bash, eval=F}
@@ -509,8 +575,8 @@ ansible -i hosts.ini ozstar -m wait_for_connection
 
 ### Ping/Check login works - playbook
 
-![:scale 65%](ping_example.png)
-![:scale 65%](ping-playbook.png)
+![:scale 65%](img/ping_example.png)
+![:scale 65%](img/ping-playbook.png)
 
 ---
 class: middle 
@@ -525,8 +591,8 @@ ansible [group] -a "df -h"
 ansible [group] -a "date"
 ```
 
-![:scale 65%](adhoc-hostname.png)
-![:scale 65%](adhoc-info.png)
+![:scale 65%](img/adhoc-hostname.png)
+![:scale 65%](img/adhoc-info.png)
 
 ---
 
@@ -589,7 +655,7 @@ inventory=hosts.ini
 
 .pull-right[
 also check your `hosts.ini` file
-![](example2_hosts.png)
+![](img/example2_hosts.png)
 ]
 
 Check out Chapter 3 of Ansible for DevOps for *ad hoc* commands for orchestration.
