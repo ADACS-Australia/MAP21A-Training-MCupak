@@ -1,0 +1,37 @@
+---
+- hosts: all
+
+- name: install telegraf
+  yum: name=telegraf-{{ telegraf_version }} state=present update_cache=yes disable_gpg_check=yes enablerepo=telegraf
+  notify: restart telegraf
+
+- name: configure telegraf
+  template: src=telegraf.conf.j2 dest=/etc/telegraf/telegraf.conf
+
+- name: start telegraf
+  service: name=telegraf state=started enabled=yes
+
+# using easy to read syntax
+
+- hosts: all
+
+- name: install telegraf
+  yum:
+    name: telegraf-{{ telegraf_version }}
+    state: present
+    update_cache: yes
+    disable_gpg_check: yes
+    enablerepo: telegraf
+  notify: restart telegraf
+
+- name: configure telegraf
+  template:
+    src: telegraf.conf.j2
+    dest: /etc/telegraf/telegraf.conf
+  notify: restart telegraf
+
+- name: start telegraf
+  service:
+    name: telegraf
+    state: started
+    enabled: yes
