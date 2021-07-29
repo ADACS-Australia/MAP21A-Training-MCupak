@@ -38,12 +38,6 @@ cat(paste("updated:", format(Sys.time(), '%d/%m/%Y')))
 
 ???
 
-"color:#2e96c6" - CIC
-
-![cic_logo](img/cic.png)
-
-???
-
 Presenter notes go here
 
 ---
@@ -400,45 +394,8 @@ pip3 install molecule
 ```
 ]
 
----
+.center[We will look at a molecule example later]
 
-#### Molecule example
-
-
-We will follow the example from "Ansible for DevOps" by J. Geerling: 
- https://github.com/geerlingguy/ansible-for-devops/tree/master/molecule
-
-- We will need `molecule` and `docker` installed (and docker running!)
-- Create a folder, e.g. `molecule_example`, and copy the `main.yml` from the above repo.
-- initialise the scenario `molecule init scenario`
-- delete the `molecule/default/INSTALL.rst` file
-- Make the `Converge` play prepare the environment (see repo)
-- This example needs a docker that can run an init system
-  - we can do this by editing the platforms section in the `molecule.yml` file
-  -  Molecule allows bash-style variables and defaults
-- add a task in `Verify.yml` to check Apache serves web traffic (see repo)
-
-```{bash eval=F}
-pip3 install molecule[docker] docker
-molecule init scenario
-rm molecule/default/INSTALL.rst
-# update files according to repo, then run
-molecule converge # or
-molecule test
-# to check other distros
-MOLECULE_DISTRO=debian10 molecule test
-```
-
-???
-
-- `image` set dynamically defined (maintained by j geerling) and has `systemd` and other packages installed as needed for running services 
-- Override the `command` Molecule sets for the Docker container, so the container image uses its own preconfigured `COMMAND`, which in this case starts the `systemd` init system and keeps the container running.
-- Add a necessary volume mount to allow processes to be managed inside the container.
-- Set the `privileged flag` on the container, so `systemd` can initialize properly.
-- `privileged flag` should be used with care
-
-- When developing or debugging with Molecule, you can run only the verify step using `molecule verify`
-- you can run all configured lint tools with `molecule lint`, instead of running yamllint and ansible-lint separately.
 
 ---
 
@@ -522,6 +479,9 @@ configure your default ansible parameters in `ansible.cfg` and save it in the ro
 [defaults]
 inventory=hosts.ini
 ```
+
+If you don't have a server you can easily access for this set up the Vagrant VMs we will use for Example 2 now.
+[slide37](Intro_to_Ansible.html#37)
 
 ---
 class: inverse, middle
@@ -613,6 +573,7 @@ class: inverse, middle
 - OS package updates 
 - Modify/Upload config files and service scripts
 - Restart services
+
 
 ---
 class: middle
@@ -707,6 +668,45 @@ class: inverse, middle
 
 ## Example 3 - Setting up roles, handlers and molecule
 
+---
+
+#### Molecule example
+
+
+We will follow the example from "Ansible for DevOps" by J. Geerling: 
+ https://github.com/geerlingguy/ansible-for-devops/tree/master/molecule
+
+- We will need `molecule` and `docker` installed (and docker running!)
+- Create a folder, e.g. `molecule_example`, and copy the `main.yml` from the above repo.
+- initialise the scenario `molecule init scenario`
+- delete the `molecule/default/INSTALL.rst` file
+- Make the `Converge` play prepare the environment (see repo)
+- This example needs a docker that can run an init system
+  - we can do this by editing the platforms section in the `molecule.yml` file
+  -  Molecule allows bash-style variables and defaults
+- add a task in `Verify.yml` to check Apache serves web traffic (see repo)
+
+```{bash eval=F}
+pip3 install molecule[docker] docker
+molecule init scenario
+rm molecule/default/INSTALL.rst
+# update files according to repo, then run
+molecule converge # or
+molecule test
+# to check other distros
+MOLECULE_DISTRO=debian10 molecule test
+```
+
+???
+
+- `image` set dynamically defined (maintained by j geerling) and has `systemd` and other packages installed as needed for running services 
+- Override the `command` Molecule sets for the Docker container, so the container image uses its own preconfigured `COMMAND`, which in this case starts the `systemd` init system and keeps the container running.
+- Add a necessary volume mount to allow processes to be managed inside the container.
+- Set the `privileged flag` on the container, so `systemd` can initialize properly.
+- `privileged flag` should be used with care
+
+- When developing or debugging with Molecule, you can run only the verify step using `molecule verify`
+- you can run all configured lint tools with `molecule lint`, instead of running yamllint and ansible-lint separately.
 
 
 ---
