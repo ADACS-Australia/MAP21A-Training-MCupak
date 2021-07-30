@@ -1,40 +1,33 @@
----
-title: "Intro to Ansible"
-author: "Rebecca Lange"
-date: "28/05/2021 updated: `r format(Sys.time(), '%d/%m/%Y')`"
-output:
-  xaringan::moon_reader:
-    seal: false
-    css: [ rutgers, default, default-fonts]
-    lib_dir: libs
-    nature:
-      beforeInit: "macros.js"
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
-      slideNumberFormat: ""
-    yolo: false
----
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Intro to Ansible</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Rebecca Lange" />
+    <script src="libs/header-attrs-2.9/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/rutgers.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
-<center> <h1> Intro to Ansible </h1> 
+
+
+&lt;center&gt; &lt;h1&gt; Intro to Ansible &lt;/h1&gt; 
 ![](https://upload.wikimedia.org/wikipedia/commons/0/05/Ansible_Logo.png)
-</center>
-<p>
-&nbsp;
-&nbsp;
-</p>
+&lt;/center&gt;
+&lt;p&gt;
+&amp;nbsp;
+&amp;nbsp;
+&lt;/p&gt;
 
  [**Rebecca Lange**](mailto:rebecca.lange@curtin.edu.au)
  
-**Astronomy Data And Computing Services & Curtin Institute for Computation**
+**Astronomy Data And Computing Services &amp; Curtin Institute for Computation**
 
-```{r, echo=FALSE, results='asis'} 
-cat(paste("updated:", format(Sys.time(), '%d/%m/%Y')))
-```
+updated: 30/07/2021
 
 ???
 
@@ -51,9 +44,9 @@ Concepts
 
 How To Examples
 
-Testing & Troubleshooting
+Testing &amp; Troubleshooting
 
-Demo & Code-Along
+Demo &amp; Code-Along
 
 Helpful Resources
 
@@ -65,17 +58,17 @@ class: inverse, center, middle
 ---
 class: middle
 
-> _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the **SSH** protocol). <small><sup>1</sup></small>
+&gt; _Ansible_ is an **agentless automation tool** that you install on a control node. From the control node, _Ansible_ manages machines and other devices remotely (by default, over the **SSH** protocol). &lt;small&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/small&gt;
 
-> It uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allows you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
+&gt; It uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allows you to describe your automation jobs in a way that approaches plain English.&lt;small&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/small&gt;
 
-> One of Ansible’s greatest strengths is its ability to **run regular shell commands verbatim**, so you can take existing scripts and commands and work on converting them into idempotent playbooks as time allows.<small><sup>3</sup></small>
+&gt; One of Ansible’s greatest strengths is its ability to **run regular shell commands verbatim**, so you can take existing scripts and commands and work on converting them into idempotent playbooks as time allows.&lt;small&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/small&gt;
 
 
-.footnote[<small><sup>1</sup> [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)</br>
-<sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</br>
-<sup>3</sup> [Ansible for DevOps book](https://www.ansiblefordevops.com/)
-</small>]
+.footnote[&lt;small&gt;&lt;sup&gt;1&lt;/sup&gt; [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)&lt;/br&gt;
+&lt;sup&gt;2&lt;/sup&gt; [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)&lt;/br&gt;
+&lt;sup&gt;3&lt;/sup&gt; [Ansible for DevOps book](https://www.ansiblefordevops.com/)
+&lt;/small&gt;]
 
 
 
@@ -86,11 +79,11 @@ Ansible is an agentless automation tool which remotely manages machines over the
 Ansible uses YAML in its playbook, making it easy to describe your automation jobs.
 It is easy to get started with Ansible since you can regular shell commands, so you can take existing scripts and convert them step by step.
 
-> Ansible is a radically simple **IT automation engine** that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.<small><sup>2</sup></small>
+&gt; Ansible is a radically simple **IT automation engine** that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.&lt;small&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/small&gt;
 
-> It uses **no agents and no additional custom security infrastructure**, so it's easy to deploy - and most importantly, it uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allow you to describe your automation jobs in a way that approaches plain English.<small><sup>2</sup></small>
+&gt; It uses **no agents and no additional custom security infrastructure**, so it's easy to deploy - and most importantly, it uses a very simple language (**YAML**, in the form of Ansible Playbooks) that allow you to describe your automation jobs in a way that approaches plain English.&lt;small&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/small&gt;
 
-<small><sup>2</sup> [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)</small>
+&lt;small&gt;&lt;sup&gt;2&lt;/sup&gt; [Ansible Overview](https://www.ansible.com/overview/how-ansible-works)&lt;/small&gt;
 
 ---
 class: inverse, center, middle
@@ -104,7 +97,7 @@ class: inverse, center, middle
 
 .right[![:scale 70%](img/why2.png)]
 
-.footnote[<small>Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)</small>]
+.footnote[&lt;small&gt;Source: [Youtube - What is Ansible - TechWorld with Nana](https://www.youtube.com/watch?v=1id6ERvfozo)&lt;/small&gt;]
 
 ???
 
@@ -118,7 +111,7 @@ If an admin needed to make the same change to **many servers** (for example, cha
 
 This raises the risk of introducing errors
 
-Ansible lets you automate these repetitive tasks, like <see slide>, and in the form of playbooks also documents your workflow.
+Ansible lets you automate these repetitive tasks, like &lt;see slide&gt;, and in the form of playbooks also documents your workflow.
 
 **Idempotence** is the ability to run an operation which produces the same
 result whether run once or multiple times
@@ -230,12 +223,12 @@ class: middle
 
 ???
 
-- the `name` field is human readable comments (optional) -> this will be printed as output when the playbook runs
+- the `name` field is human readable comments (optional) -&gt; this will be printed as output when the playbook runs
 - `host` specifies which host group is targeted, the group is specified in the inventory
 - `vars` can be specified at the beginning of the playbook, on the command line, separate file
-  - environment variables -> e.g. bash profile
+  - environment variables -&gt; e.g. bash profile
 - `remote_user` identity which will perform the tasks, could be just one or multiple, or different identity for different tasks
-  - privilege escalation -> become: true 
+  - privilege escalation -&gt; become: true 
 - work gets done in `modules` with `key=value` format
 - [including and importing](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse.html#playbooks-reuse), dynamic vs static
 
@@ -250,7 +243,7 @@ class: middle
 
 - `handlers` are tasks that are referenced globaly by a unique name
   - only get run when they are `notified`
-  - only run after all other plays in a playbook are run -> even if they are called several times they will only be run once at the end
+  - only run after all other plays in a playbook are run -&gt; even if they are called several times they will only be run once at the end
 
 ---
 class: middle
@@ -265,7 +258,8 @@ class: middle
 
 ???
 
-```{bash eval=FALSE}
+
+```bash
 ansible-palybook playbook.yml --syntax-check
 ```
 
@@ -279,7 +273,7 @@ The inventory file can be in one of many formats, for example INI:
 
 ???
 
-- hosts can be grouped -> [group-name]
+- hosts can be grouped -&gt; [group-name]
 - you can specify numeric or alphabetical ranges, 
   - leading zeros can be included, 
   - ranges are inclusive
@@ -290,7 +284,7 @@ The inventory file can be in one of many formats, for example INI:
 ---
 class: inverse, center, middle
 
-# Testing & Troubleshooting
+# Testing &amp; Troubleshooting
 
 ![:scale 90%](img/test_spectrum.png)
 
@@ -306,7 +300,8 @@ Some common errors in playbooks can arise from **yaml syntax issues**, like too 
 
 [`yamllint`](https://yamllint.readthedocs.io/en/stable/) is a YAML lint tool installable via `pip`, once  installed it can be run on any YAML file in the current directory by passing the path:
 
-```{bash eval=FALSE}
+
+```bash
 pip3 install yamllint
 
 # to run yamllint on all YAML files in the current directory 
@@ -327,7 +322,8 @@ Ansible also has inbuilt syntax checking.
 
 Executing a playbook with `--syntax-check` will not run the plays, instead Asnible checks that everything in the playbook can be (statically*) loaded without fatal errors.
 
-```{bash eval=FALSE}
+
+```bash
 ansible-playbook playbook.yml --syntax-check
 ```
 
@@ -348,10 +344,11 @@ Combining `yamllint` and `--syntax-check` should form your basic CI tests.
 
 `ansible-lint` can help improve ansible specific style issues.
 
-```{bash eval=FALSE}
+
+```bash
 pip3 install ansible-lint
 #to run on a playbook
-ansible-lint <playbook>.yml
+ansible-lint &lt;playbook&gt;.yml
 ```
 
 ![:scale 85%](img/ansible-lint.png)
@@ -408,14 +405,14 @@ pip3 install molecule
 ---
 class: inverse, center, middle
 
-# Demo & Code-Along
+# Demo &amp; Code-Along
 
 ---
 
 ## Requirements
 
 **Control Node**
-- Python > v3.5, 
+- Python &gt; v3.5, 
   - ansible-core 2.12 and Ansible 5.0.0 will require Python 3.8
 - Windows is _not_ supported for the control node
 - YAML
@@ -423,7 +420,7 @@ class: inverse, center, middle
 
 **Managed Node**
 - SSH and SFTP
-  - if SFTP not available -> switch to SCP
+  - if SFTP not available -&gt; switch to SCP
 - Python if possible
 
 **Documentation** 
@@ -443,7 +440,8 @@ class: inverse, center, middle
 - Contains the Ansible language, runtime, and a short list of core modules and other plugins
 - Install with `pip` or from source from the ansible/ansible GitHub repository (development version)
 
-```{bash, eval=F}
+
+```bash
 # to install ansible
 python -m pip install --user ansible
 
@@ -460,7 +458,8 @@ check that `~/.local/bin/` is added to the `$PATH`
 
 one can add arg complete
 
-```{bash, eval=F}
+
+```bash
 python -m pip install argcomplete
 sudo activate-global-python-argcomplete
 ```
@@ -499,7 +498,8 @@ class: middle
 
 The ansible `ping` module verifies the ability to login and that a usable Python is configured on the managed node, it is not an ICMP ping.
 
-```{bash, eval=F}
+
+```bash
 ansible -i [host filename] [group] -m ping -u [username]\
 --private-key=[file/location]
 ```
@@ -509,7 +509,8 @@ ansible -i [host filename] [group] -m ping -u [username]\
 
 ICMP - Internet Control Message Protocol 
 
-```{bash, eval=F}
+
+```bash
 ansible -i hosts.ini gcs -m ping -u rebecca_lange_computation_org_au --private-key=~/.ssh/gcloud
 ```
 
@@ -520,14 +521,16 @@ class: middle
 The `wait_for_connection` module waits until a remote system is reachable/usable and will retry the connecting after a specified amount of time.
 
 
-```{bash, eval=F}
+
+```bash
 ansible -i [host filename] [group] -m wait_for_connection
 ```
 
 ![](img/adhoc-wait.png)
 
 ???
-```{bash, eval=F}
+
+```bash
 ansible -i hosts.ini ozstar -m wait_for_connection
 ```
 
@@ -543,7 +546,8 @@ class: middle
 
 ### Collect system info - ad hoc
 
-```{bash, eval=F}
+
+```bash
 ansible -i [host filename] [group] -a "hostname"
 
 # if the host file name has been set in the ansible.cfg it can be omitted from the command
@@ -581,7 +585,7 @@ class: middle
 ### Set Up Vagrant VMs
 
 For this we will set up three Vagrant VMs so that we can test our configurations without breaking our production servers.
-<small>
+&lt;small&gt;
 1. Download and install [Vagrant](https://www.vagrantup.com/downloads) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) (when installing, make sure the command line tools are installed, so Vagrant works with it)
 2. Create a new folder somewhere on your hard drive where you will keep your Vagrantfile and provisioning instructions, e.g. `~/vagrant_vms/`, navigate to this folder in your Terminal.
 3. Copy the `Vagrantfile` from the `Example 2` folder in the github repo into the folder you created in step 2.
@@ -595,7 +599,7 @@ Note: [HashiCorp’s Vagrant Cloud](https://app.vagrantup.com/boxes/search) has 
 vagrant box add [user/boxname]
 vagrant init [user/boxname]
  ```
-</small>
+&lt;/small&gt;
 
 ???
 
@@ -659,7 +663,8 @@ callback_whitelist = profile_tasks
 log_path=ansible_dfnext_upload.log
 ```
 
-```{bash, eval=F} 
+
+```bash
 echo "some info to upload" | tee -a upload/wvdial.conf upload/qmi-network.conf upload/network/qmi-network.conf upload/network/interfaces.all upload/network/interfaces.wwan
 ```
 
@@ -686,7 +691,8 @@ We will follow the example from "Ansible for DevOps" by J. Geerling:
   -  Molecule allows bash-style variables and defaults
 - add a task in `Verify.yml` to check Apache serves web traffic (see repo)
 
-```{bash eval=F}
+
+```bash
 pip3 install molecule
 pip3 install molecule[docker] docker # install docker driver
 molecule init scenario
@@ -716,7 +722,7 @@ MOLECULE_DISTRO=debian10 molecule test
 ---
 class: inverse, center, middle
 
-# Questions & Helpful Resources
+# Questions &amp; Helpful Resources
 
 
 ---
@@ -739,9 +745,134 @@ class: inverse, center, middle
 - [yamllint](https://yamllint.readthedocs.io/en/stable/)
 
 - [What is Ansible](https://www.youtube.com/watch?v=1id6ERvfozo) - TechWorld with Nana
-- [The Bullhorn](https://us19.campaign- archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420) - Ansible’s official newsletter.
+- [The Bullhorn](https://us19.campaign- archive.com/home/?u=56d874e027110e35dea0e03c1&amp;id=d6635f5420) - Ansible’s official newsletter.
 - [Ansible Mailing List on Google Groups](https://groups.google.com/forum/#!forum/ansible-project)
 - [Ansible Blog](https://www.ansible.com/blog)
 
 - [Ansible Playbook Examples](https://www.middlewareinventory.com/blog/ansible-playbook-example/)
 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": ""
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
